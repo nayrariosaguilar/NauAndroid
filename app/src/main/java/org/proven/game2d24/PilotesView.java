@@ -57,8 +57,8 @@ public class PilotesView extends View {
 //                        return true;
 //                    } else {
 //                        // Crear bola si no se toca la nave
-//                        randomBall(x, y);
-//                        return true;
+                        createRandomBall(x, y);
+                        return true;
 //                    }
                 }
                 return false;
@@ -83,25 +83,32 @@ public class PilotesView extends View {
         }
         initBalls();
     }
-    int randomColorBackPilota() {
-        int red = (int) (Math.random() * 2);
-        int green = (int) (Math.random() * 2);
-        int blue = (int) (Math.random() * 2);
-        return Color.rgb(red, green, blue);
+    private int randomColorBackPilota() {
+        // Usamos colores completamente visibles en lugar de muy oscuros
+        int colorChoice = random.nextInt(4);
+        switch (colorChoice) {
+            case 0: return Color.RED;
+            case 1: return Color.BLUE;
+            case 2: return Color.GREEN;
+            case 3: return Color.YELLOW;
+            default: return Color.WHITE;
+        }
     }
 
     private void initBalls() {
-        int numBalls = random.nextInt(6) + 3;
+        int numBalls = random.nextInt(6) + 3; // 3 a 8 bolas
+        System.out.println("Creando " + numBalls + " bolas iniciales");
 
         for (int i = 0; i < numBalls; i++) {
-            int x = random.nextInt(screenWidth);
-            int y = random.nextInt(screenHeight);
-            createRandomBall(x,y);
+            // Distribuimos las bolas por toda la pantalla
+            int x = random.nextInt(screenWidth - 100) + 50; // Margen de 50px
+            int y = random.nextInt(screenHeight - 100) + 50; // Margen de 50px
+            createRandomBall(x, y);
         }
     }
     private void createRandomBall(int x, int y) {
 
-        Ball ball = new Ball();
+        Ball ball = new Ball(x, y);
         int radius = random.nextInt(41) + 30;
         ball.setRadius(radius);
         ball.setRadius((int) ((Math.random() + 0.35) * 100));
