@@ -5,6 +5,8 @@
     android:orientation="vertical"
     android:background="@drawable/fons">
 
+    <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:gravity="center_horizontal" android:text="Animació 2D: pilotes"/>
+
     <org.proven.game2d24.PilotesView
         android:id="@+id/gameview"
         android:layout_width="match_parent"
@@ -12,5 +14,6 @@
         android:focusable="true"
         android:focusableInTouchMode="true"
         />
+
 
 </LinearLayout>

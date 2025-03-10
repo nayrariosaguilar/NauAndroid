@@ -13,8 +13,8 @@ public class ThreadGame extends Thread {
         try {
             while (true) {
                 sleep(200);
-                pilotesView.move();
-                pilotesView.collisions();
+                pilotesView.update();
+                pilotesView.checkCollisions();
                 pilotesView.postInvalidate();
             }
         } catch (Exception e) {

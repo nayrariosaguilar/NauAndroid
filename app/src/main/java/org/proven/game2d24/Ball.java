@@ -4,21 +4,24 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+/**
+ * Ball class - Clase que representa una bola en el juego
+ * @author Versión mejorada
+ * @date 10/03/2025
+ */
 public class Ball {
-    int x,y;  // Position donde se encuentra
-    int maxX, maxY; // Límit X Y
-    int radius;
-    Paint paint;  // Estil objecte
+    int x, y;                // Posición actual
+    int maxX, maxY;          // Límites de la pantalla
+    int radius;              // Radio de la bola
+    Paint paint;             // Estilo de la bola
+    int velocity;            // Velocidad de movimiento
+    boolean directionX;      // Dirección horizontal (true = derecha, false = izquierda)
+    boolean directionY;      // Dirección vertical (true = abajo, false = arriba)
+    boolean isBullet = false; // Indica si es un proyectil disparado por la nave
 
-    //velocidad del objeto
-    int velocity;
-    boolean directionX; // Horizontal
-    boolean directionY; // Vertical
-    boolean directionW; // left
-    boolean directionZ; // right
-
-    //limites de la pantalla????
-
+    /**
+     * Constructor por defecto
+     */
     public Ball() {
         x = 0;
         y = 0;
@@ -32,60 +35,109 @@ public class Ball {
         directionY = true;
     }
 
+    /**
+     * Constructor con posición inicial
+     * @param x Coordenada X inicial
+     * @param y Coordenada Y inicial
+     */
     public Ball(int x, int y) {
         this();
         this.x = x;
         this.y = y;
     }
 
-    public boolean collision(Ball  b) {
-        boolean ret = false;
-        double D =
-                Math.sqrt( Math.pow(getX() - b.getX(), 2)
-                        + Math.pow(getY() - b.getY(), 2));
-        if(D <= (getRadius() + b.getRadius())) {
-            ret = true;
+    /**
+     * Constructor completo para balas
+     * @param x Coordenada X inicial
+     * @param y Coordenada Y inicial
+     * @param radius Radio
+     * @param velocity Velocidad
+     * @param isBullet Indica si es una bala
+     */
+    public Ball(int x, int y, int radius, int velocity, boolean isBullet) {
+        this(x, y);
+        this.radius = radius;
+        this.velocity = velocity;
+        this.isBullet = isBullet;
+        if (isBullet) {
+            // Las balas siempre van hacia arriba
+            this.directionY = false;
+            // Color blanco para las balas
+            this.paint.setColor(Color.WHITE);
         }
-        return ret;
     }
 
+    /**
+     * Comprueba si hay colisión con otra bola
+     * @param b Bola con la que comprobar colisión
+     * @return true si hay colisión
+     */
+    public boolean collision(Ball b) {
+        // Calculamos la distancia entre los centros de las bolas
+        double distance = Math.sqrt(
+                Math.pow(getX() - b.getX(), 2) + Math.pow(getY() - b.getY(), 2)
+        );
+        // Hay colisión si la distancia es menor o igual a la suma de los radios
+        return distance <= (getRadius() + b.getRadius());
+    }
+
+    /**
+     * Dibuja la bola en el canvas
+     * @param canvas Canvas donde dibujar
+     */
     public void onDraw(Canvas canvas) {
-        canvas.drawCircle(getX() , getY()
-                          , getRadius(), getPaint());
+        canvas.drawCircle(getX(), getY(), getRadius(), getPaint());
     }
-//metodo que hace avanzar la pelota a una nueva posicion
+
+    /**
+     * Mueve la bola según su dirección y velocidad
+     * Si es una bala, solo se mueve verticalmente hacia arriba
+     * Si no, se mueve en ambas direcciones y rebota en los límites
+     */
     public void move() {
-        // Directions  X
-        if(getX() > getMaxX() - getRadius()) {
-            setDirectionX(false);
-            setX(getMaxX()-getRadius());
-        }
-        if(getX() < getRadius()) {
-            setDirectionX(true);
-            setX(getRadius());
-        }
-        // Directions  Y
-        if(getY() > getMaxY() - getRadius()) {
-            setDirectionY(false);
-            setY(getMaxY()-getRadius());
-        }
-        if(getY() < getRadius()) {
-            setDirectionY(true);
-            setY(getRadius());
-        }
-        if(isDirectionX()) {  // Right
-            setX(getX() + getVelocity());
-        }else{                // left
-            setX(getX() - getVelocity());
-        }
-        if(isDirectionY()) {  // Down
-            setY(getY() + getVelocity());
-        }else{                // Up
-            setY(getY() - getVelocity());
+        if (isBullet) {
+            // Las balas solo se mueven hacia arriba
+            y -= velocity;
+        } else {
+            // Comprobar límites horizontales
+            if (x >= maxX - radius) {
+                directionX = false;
+                x = maxX - radius;
+            } else if (x <= radius) {
+                directionX = true;
+                x = radius;
+            }
+
+            // Comprobar límites verticales
+            if (y >= maxY - radius) {
+                directionY = false;
+                y = maxY - radius;
+            } else if (y <= radius) {
+                directionY = true;
+                y = radius;
+            }
+
+            // Actualizar posición según dirección
+            x += directionX ? velocity : -velocity;
+            y += directionY ? velocity : -velocity;
         }
     }
 
+    /**
+     * Invierte la dirección horizontal
+     */
+    public void reverseDirectionX() {
+        directionX = !directionX;
+    }
 
+    /**
+     * Invierte la dirección vertical
+     */
+    public void reverseDirectionY() {
+        directionY = !directionY;
+    }
+
+    // Getters y setters
 
     public int getX() {
         return x;
@@ -157,5 +209,13 @@ public class Ball {
 
     public void setDirectionY(boolean directionY) {
         this.directionY = directionY;
+    }
+
+    public boolean isBullet() {
+        return isBullet;
+    }
+
+    public void setBullet(boolean bullet) {
+        this.isBullet = bullet;
     }
 }
