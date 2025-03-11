@@ -24,18 +24,14 @@ public class PilotesView extends View {
     private ArrayList<Ball> balls;
     private ArrayList<Ball> bullets;
     private Ship ship;
-
     private int score = 0;
     private boolean gameOver = false;
     private boolean victory = false;
 
     private Paint scorePaint;
     private Drawable shipDrawable;
-
     private int screenWidth, screenHeight;
-
     private Random random = new Random();
-
     private static final int[] COLOR_PALETTE = {
             Color.WHITE,
             Color.RED,
@@ -115,7 +111,7 @@ public class PilotesView extends View {
     }
 
     private void initBalls() {
-        int numBalls = random.nextInt(5) + 5;
+        int numBalls = random.nextInt(3) ;
 
         for (int i = 0; i < numBalls; i++) {
             int x = random.nextInt(screenWidth - 100) + 50;
@@ -129,10 +125,9 @@ public class PilotesView extends View {
         Ball ball = new Ball(x, y);
         int radius = random.nextInt(41) + 30;
         ball.setRadius(radius);
-        ball.setVelocity(random.nextInt(11) + 5);
+        ball.setVelocity(10);
         ball.setDirectionX(random.nextBoolean());
         ball.setDirectionY(random.nextBoolean());
-        //  límites
         ball.setMaxX(screenWidth);
         ball.setMaxY(screenHeight);
         Paint paint = new Paint();
@@ -140,7 +135,6 @@ public class PilotesView extends View {
         ball.setPaint(paint);
         balls.add(ball);
     }
-    //dddd
 
     private void shootBullet() {
         if (ship != null) {
@@ -167,7 +161,6 @@ public class PilotesView extends View {
                 bulletIterator.remove();
             }
         }
-
         // Mover nave
         if (ship != null) {
             ship.move();

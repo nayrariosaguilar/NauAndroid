@@ -3,6 +3,8 @@ package org.proven.game2d24;
 public class ThreadGame extends Thread {
     PilotesView pilotesView;
 
+    public static final int delayForGame = 2000;
+
     public ThreadGame(PilotesView pilotesView) {
         this.pilotesView = pilotesView;
     }
@@ -11,8 +13,9 @@ public class ThreadGame extends Thread {
     public void run() {
         super.run();
         try {
+            sleep(delayForGame);
             while (true) {
-                sleep(170);
+                sleep(30);
                 pilotesView.update();
                 pilotesView.checkCollisions();
                 pilotesView.postInvalidate();

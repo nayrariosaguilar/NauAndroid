@@ -19,17 +19,17 @@ public class Ship {
 
     public Ship(Drawable drawable) {
         this.drawable = drawable;
-        this.speed = 15;
+        this.speed = 10;
         this.movingRight = true;
 
-        if (drawable != null) {
-            this.width = drawable.getIntrinsicWidth();
-            this.height = drawable.getIntrinsicHeight();
-        } else {
+//        if (drawable != null) {
+//            this.width = drawable.getIntrinsicWidth();
+//            this.height = drawable.getIntrinsicHeight();
+//        } else {
             // Dimensiones
-            this.width = 100;
-            this.height = 50;
-        }
+            this.width = 300;
+            this.height = 200;
+       // }
     }
     public Ship(int x, int y, int width, int height, int speed, Context context) {
         this.x = x;
@@ -101,7 +101,6 @@ public class Ship {
         return x >= this.x && x <= this.x + width &&
                 y >= this.y && y <= this.y + height;
     }
-
 
     public Ball shoot() {
         int bulletX = x + width / 2;
