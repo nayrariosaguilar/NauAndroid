@@ -23,20 +23,11 @@ public class Ship {
     private int maxX, maxY;           // Límites de la pantalla
     private Bitmap shipImage;         // Imagen bitmap alternativa
 
-    /**
-     * Constructor con drawable
-     * @param drawable Imagen de la nave (puede ser null)
-     */
     public Ship(Drawable drawable) {
         this.drawable = drawable;
         this.speed = 15;
         this.movingRight = true;
 
-        // Inicializar paint por si no hay drawable
-        paint = new Paint();
-        paint.setColor(Color.CYAN);
-
-        // Si hay drawable, usamos sus dimensiones
         if (drawable != null) {
             this.width = drawable.getIntrinsicWidth();
             this.height = drawable.getIntrinsicHeight();
@@ -46,16 +37,6 @@ public class Ship {
             this.height = 50;
         }
     }
-
-    /**
-     * Constructor con bitmap
-     * @param x Posición X inicial
-     * @param y Posición Y inicial
-     * @param width Ancho de la nave
-     * @param height Alto de la nave
-     * @param speed Velocidad de movimiento
-     * @param context Contexto para cargar recursos
-     */
     public Ship(int x, int y, int width, int height, int speed, Context context) {
         this.x = x;
         this.y = y;
@@ -64,36 +45,21 @@ public class Ship {
         this.speed = speed;
         this.movingRight = true;
 
-        // Cargamos la imagen
         try {
-            shipImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.nautransparent);
+            shipImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.nau);
             shipImage = Bitmap.createScaledBitmap(shipImage, width, height, true);
         } catch (Exception e) {
-            // Si no podemos cargar la imagen, usamos un rectángulo
-            paint = new Paint();
-            paint.setColor(Color.CYAN);
-            System.out.println("Error cargando imagen: " + e.getMessage());
+            shipImage = null;
         }
     }
-
-    /**
-     * Establece los límites de la pantalla y actualiza la posición inicial
-     * @param maxX Ancho de la pantalla
-     * @param maxY Alto de la pantalla
-     */
     public void setBounds(int maxX, int maxY) {
         this.maxX = maxX;
         this.maxY = maxY;
 
-        // Posición inicial: centrada horizontalmente y en la parte inferior
         x = maxX / 2 - width / 2;
         y = maxY - height - 20; // 20px de margen
     }
 
-    /**
-     * Mueve la nave automáticamente
-     * Cambia de dirección al llegar a los bordes
-     */
     public void move() {
         if (movingRight) {
             x += speed;
@@ -110,31 +76,18 @@ public class Ship {
         }
     }
 
-    /**
-     * Dibuja la nave en el canvas
-     * @param canvas Canvas donde dibujar
-     */
     public void draw(Canvas canvas) {
         if (shipImage != null) {
-            // Dibujar imagen bitmap
             canvas.drawBitmap(shipImage, x, y, null);
         } else if (drawable != null) {
-            // Dibujar drawable
             drawable.setBounds(x, y, x + width, y + height);
             drawable.draw(canvas);
         } else {
-            // Dibujar rectángulo
             canvas.drawRect(x, y, x + width, y + height, paint);
         }
     }
 
-    /**
-     * Comprueba si la nave colisiona con una bola
-     * @param ball Bola a comprobar
-     * @return true si hay colisión
-     */
     public boolean collidesWith(Ball ball) {
-        // Calculamos el centro de la nave
         int shipCenterX = x + (width / 2);
         int shipCenterY = y + (height / 2);
 
@@ -150,25 +103,15 @@ public class Ship {
         // Hay colisión si la distancia es menor que la suma de radios
         return distance <= (shipRadius + ball.getRadius());
     }
-
-    /**
-     * Comprueba si un punto está dentro de la nave
-     * @param x Coordenada X
-     * @param y Coordenada Y
-     * @return true si el punto está dentro
-     */
     public boolean contains(float x, float y) {
         return x >= this.x && x <= this.x + width &&
                 y >= this.y && y <= this.y + height;
     }
 
-    /**
-     * Crea una bala que sale desde el centro superior de la nave
-     * @return La bala creada
-     */
+
     public Ball shoot() {
         int bulletX = x + width / 2;
-        int bulletY = y - 5; // Justo encima de la nave
+        int bulletY = y - 5;
         Ball bullet = new Ball(bulletX, bulletY, 15, 20, true);
 
         return bullet;

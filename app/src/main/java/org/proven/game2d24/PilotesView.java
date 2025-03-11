@@ -25,27 +25,21 @@ import java.util.Random;
  * @date 10/03/2025
  */
 public class PilotesView extends View {
-    // Elementos del juego
     private ArrayList<Ball> balls;        // Bolas normales
     private ArrayList<Ball> bullets;      // Balas/proyectiles
     private Ship ship;                    // Nave
 
-    // Estado del juego
     private int score = 0;                // Puntuación
     private boolean gameOver = false;     // Indica si el juego ha terminado
     private boolean victory = false;      // Indica si ha ganado
 
-    // Recursos gráficos
     private Paint scorePaint;             // Para dibujar la puntuación
     private Drawable shipDrawable;        // Imagen de la nave
 
-    // Dimensiones de la pantalla
     private int screenWidth, screenHeight;
 
-    // Generador de números aleatorios
     private Random random = new Random();
 
-    // Paleta de colores para las bolas
     private static final int[] COLOR_PALETTE = {
             Color.RED,
             Color.GREEN,
@@ -62,11 +56,6 @@ public class PilotesView extends View {
         initGame(context);
     }
 
-    /**
-     * Constructor con atributos
-     * @param context Contexto
-     * @param attrs Atributos
-     */
     public PilotesView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         initGame(context);
@@ -98,10 +87,6 @@ public class PilotesView extends View {
         });
     }
 
-    /**
-     * Inicializa el juego
-     * @param context Contexto
-     */
     private void initGame(Context context) {
         // Inicializar colecciones
         balls = new ArrayList<>();
@@ -119,7 +104,7 @@ public class PilotesView extends View {
 
         // Crear la nave
         try {
-            shipDrawable = context.getResources().getDrawable(R.drawable.nautransparent, context.getTheme());
+            shipDrawable = context.getResources().getDrawable(R.drawable.nau, context.getTheme());
             ship = new Ship(shipDrawable);
         } catch (Exception e) {
             // Si no se puede cargar el drawable, crear la nave sin imagen
@@ -199,9 +184,6 @@ public class PilotesView extends View {
         balls.add(ball);
     }
 
-    /**
-     * Dispara una bala desde la nave
-     */
     private void shootBullet() {
         if (ship != null) {
             Ball bullet = ship.shoot();
@@ -211,9 +193,6 @@ public class PilotesView extends View {
         }
     }
 
-    /**
-     * Actualiza la posición de todos los elementos del juego
-     */
     public void update() {
         if (gameOver) return;
 
@@ -222,13 +201,10 @@ public class PilotesView extends View {
             b.move();
         }
 
-        // Mover y comprobar balas
         Iterator<Ball> bulletIterator = bullets.iterator();
         while (bulletIterator.hasNext()) {
             Ball bullet = bulletIterator.next();
             bullet.move();
-
-            // Eliminar balas que salen de la pantalla
             if (bullet.getY() < 0) {
                 bulletIterator.remove();
             }
@@ -240,22 +216,14 @@ public class PilotesView extends View {
         }
     }
 
-    /**
-     * Comprueba colisiones entre todos los elementos
-     */
+
     public void checkCollisions() {
         if (gameOver) return;
 
-        // 1. Colisiones entre bolas
         checkBallCollisions();
-
-        // 2. Colisiones entre balas y bolas
         checkBulletCollisions();
-
-        // 3. Colisiones entre nave y bolas
         checkShipCollisions();
 
-        // 4. Comprobar victoria (no quedan bolas)
         if (balls.isEmpty()) {
             gameOver = true;
             victory = true;
@@ -263,11 +231,6 @@ public class PilotesView extends View {
         }
     }
 
-    /**
-     * Comprueba colisiones entre bolas
-     * Si son del mismo color, desaparecen
-     * Si no, rebotan
-     */
     private void checkBallCollisions() {
         for (int i = 0; i < balls.size() - 1; i++) {
             Ball b1 = balls.get(i);
@@ -276,11 +239,10 @@ public class PilotesView extends View {
                 if (b1.collision(b2)) {
                     if (b1.getPaint().getColor() == b2.getPaint().getColor()) {
                         // Mismo color: eliminar ambas
-                        balls.remove(j); // Eliminar la segunda primero
+                        balls.remove(j);
                         balls.remove(i);
-                        return; // Salir para evitar problemas con índices
+                        return;
                     } else {
-                        // Distinto color: rebotar
                         b1.reverseDirectionX();
                         b1.reverseDirectionY();
                         b2.reverseDirectionX();
@@ -291,10 +253,6 @@ public class PilotesView extends View {
         }
     }
 
-    /**
-     * Comprueba colisiones entre balas y bolas
-     * Si colisionan, la bala y la bola desaparecen y se suma un punto
-     */
     private void checkBulletCollisions() {
         Iterator<Ball> bulletIterator = bullets.iterator();
         while (bulletIterator.hasNext()) {
@@ -308,7 +266,7 @@ public class PilotesView extends View {
                     // Eliminar la bola y la bala
                     ballIterator.remove();
                     hit = true;
-                    score++; // Aumentar puntuación
+                    score++;
                 }
             }
 
@@ -318,10 +276,6 @@ public class PilotesView extends View {
         }
     }
 
-    /**
-     * Comprueba colisiones entre la nave y las bolas
-     * Si colisionan, el juego termina
-     */
     private void checkShipCollisions() {
         if (ship != null) {
             for (Ball ball : balls) {
@@ -335,35 +289,24 @@ public class PilotesView extends View {
         }
     }
 
-    /**
-     * Dibuja todos los elementos del juego
-     */
     @Override
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
-        // Fondo negro
-        canvas.drawColor(Color.BLACK);
-
-        // Dibujar bolas
         for (Ball ball : balls) {
             ball.onDraw(canvas);
         }
 
-        // Dibujar balas
         for (Ball bullet : bullets) {
             bullet.onDraw(canvas);
         }
 
-        // Dibujar nave
         if (ship != null) {
             ship.draw(canvas);
         }
 
-        // Dibujar puntuación
         canvas.drawText("Score: " + score, 20, 60, scorePaint);
 
-        // Si el juego ha terminado, mostrar mensaje
         if (gameOver) {
             Paint messagePaint = new Paint();
             messagePaint.setTextSize(70);
@@ -379,12 +322,7 @@ public class PilotesView extends View {
         }
     }
 
-    /**
-     * Muestra un diálogo con el resultado del juego
-     * Permite reiniciar o salir
-     */
     private void showGameOverDialog() {
-        // Usar post para asegurar que se ejecuta en el hilo de UI
         post(new Runnable() {
             @Override
             public void run() {
@@ -410,32 +348,19 @@ public class PilotesView extends View {
             }
         });
     }
-
-    /**
-     * Reinicia el juego completamente
-     */
     public void resetGame() {
-        // Limpiar colecciones
         balls.clear();
         bullets.clear();
-
-        // Resetear estado
         score = 0;
         gameOver = false;
         victory = false;
 
-        // Inicializar bolas
         if (screenWidth > 0 && screenHeight > 0) {
             initBalls();
         }
-
-        // Redibujar
         invalidate();
     }
 
-    /**
-     * Indica si el juego ha terminado
-     */
     public boolean isGameOver() {
         return gameOver;
     }
