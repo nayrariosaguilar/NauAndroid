@@ -23,5 +23,6 @@ public class ThreadGame extends Thread {
         } catch (Exception e) {
             System.out.println("ERROR: " + e.toString());
         }
+        //prueba numero 1
     }
 }
