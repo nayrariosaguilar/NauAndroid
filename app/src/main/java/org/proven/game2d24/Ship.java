@@ -8,20 +8,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 
-/**
- * Ship class - Clase que representa la nave del juego
- * @author Versión mejorada
- * @date 10/03/2025
- */
+
 public class Ship {
-    private Drawable drawable;        // Imagen de la nave
-    private int x, y;                 // Posición
-    private int width, height;        // Dimensiones
-    private boolean movingRight;      // Dirección (true = derecha, false = izquierda)
-    private int speed;                // Velocidad
-    private Paint paint;              // Para dibujar si no hay imagen
-    private int maxX, maxY;           // Límites de la pantalla
-    private Bitmap shipImage;         // Imagen bitmap alternativa
+    private Drawable drawable;
+    private int x, y;
+    private int width, height;
+    private boolean movingRight;
+    private int speed;
+    private Paint paint;
+    private int maxX, maxY;
+    private Bitmap shipImage;
 
     public Ship(Drawable drawable) {
         this.drawable = drawable;
@@ -32,7 +28,7 @@ public class Ship {
             this.width = drawable.getIntrinsicWidth();
             this.height = drawable.getIntrinsicHeight();
         } else {
-            // Dimensiones por defecto
+            // Dimensiones
             this.width = 100;
             this.height = 50;
         }
@@ -57,7 +53,7 @@ public class Ship {
         this.maxY = maxY;
 
         x = maxX / 2 - width / 2;
-        y = maxY - height - 20; // 20px de margen
+        y = maxY - height - 20;
     }
 
     public void move() {

@@ -4,24 +4,17 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
-/**
- * Ball class - Clase que representa una bola en el juego
- * @author Versión mejorada
- * @date 10/03/2025
- */
 public class Ball {
-    int x, y;                // Posición actual
-    int maxX, maxY;          // Límites de la pantalla
-    int radius;              // Radio de la bola
-    Paint paint;             // Estilo de la bola
-    int velocity;            // Velocidad de movimiento
-    boolean directionX;      // Dirección horizontal (true = derecha, false = izquierda)
-    boolean directionY;      // Dirección vertical (true = abajo, false = arriba)
-    boolean isBullet = false; // Indica si es un proyectil disparado por la nave
+    int x, y;
+    int maxX, maxY;
+    int radius;
+    Paint paint;
+    int velocity;
+    boolean directionX;
+    boolean directionY;
+    boolean isBullet = false;
 
-    /**
-     * Constructor por defecto
-     */
+
     public Ball() {
         x = 0;
         y = 0;
@@ -35,71 +28,40 @@ public class Ball {
         directionY = true;
     }
 
-    /**
-     * Constructor con posición inicial
-     * @param x Coordenada X inicial
-     * @param y Coordenada Y inicial
-     */
     public Ball(int x, int y) {
         this();
         this.x = x;
         this.y = y;
     }
 
-    /**
-     * Constructor completo para balas
-     * @param x Coordenada X inicial
-     * @param y Coordenada Y inicial
-     * @param radius Radio
-     * @param velocity Velocidad
-     * @param isBullet Indica si es una bala
-     */
     public Ball(int x, int y, int radius, int velocity, boolean isBullet) {
         this(x, y);
         this.radius = radius;
         this.velocity = velocity;
         this.isBullet = isBullet;
         if (isBullet) {
-            // Las balas siempre van hacia arriba
+            //  balas van arriba
             this.directionY = false;
-            // Color blanco para las balas
-            this.paint.setColor(Color.WHITE);
+            this.paint.setColor(Color.CYAN);
         }
     }
 
-    /**
-     * Comprueba si hay colisión con otra bola
-     * @param b Bola con la que comprobar colisión
-     * @return true si hay colisión
-     */
     public boolean collision(Ball b) {
-        // Calculamos la distancia entre los centros de las bolas
         double distance = Math.sqrt(
                 Math.pow(getX() - b.getX(), 2) + Math.pow(getY() - b.getY(), 2)
         );
-        // Hay colisión si la distancia es menor o igual a la suma de los radios
         return distance <= (getRadius() + b.getRadius());
     }
 
-    /**
-     * Dibuja la bola en el canvas
-     * @param canvas Canvas donde dibujar
-     */
     public void onDraw(Canvas canvas) {
         canvas.drawCircle(getX(), getY(), getRadius(), getPaint());
     }
 
-    /**
-     * Mueve la bola según su dirección y velocidad
-     * Si es una bala, solo se mueve verticalmente hacia arriba
-     * Si no, se mueve en ambas direcciones y rebota en los límites
-     */
     public void move() {
         if (isBullet) {
-            // Las balas solo se mueven hacia arriba
             y -= velocity;
         } else {
-            // Comprobar límites horizontales
+            //  límites horizontales
             if (x >= maxX - radius) {
                 directionX = false;
                 x = maxX - radius;
@@ -108,7 +70,7 @@ public class Ball {
                 x = radius;
             }
 
-            // Comprobar límites verticales
+            //  límites verticales
             if (y >= maxY - radius) {
                 directionY = false;
                 y = maxY - radius;
@@ -123,16 +85,10 @@ public class Ball {
         }
     }
 
-    /**
-     * Invierte la dirección horizontal
-     */
     public void reverseDirectionX() {
         directionX = !directionX;
     }
 
-    /**
-     * Invierte la dirección vertical
-     */
     public void reverseDirectionY() {
         directionY = !directionY;
     }
