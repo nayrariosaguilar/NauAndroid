@@ -262,21 +262,7 @@ public class PilotesView extends View {
             ship.draw(canvas);
         }
 
-        canvas.drawText("Score: " + score, 20, 60, scorePaint);
-
-        if (gameOver) {
-            Paint messagePaint = new Paint();
-            messagePaint.setTextSize(70);
-            messagePaint.setColor(victory ? Color.GREEN : Color.RED);
-
-            String message = victory ? "¡VICTORIA!" : "GAME OVER";
-            float textWidth = messagePaint.measureText(message);
-
-            canvas.drawText(message,
-                    (screenWidth - textWidth) / 2,
-                    screenHeight / 2,
-                    messagePaint);
-        }
+        canvas.drawText("Puntuación: " + score, 400, 60, scorePaint);
     }
 
     private void showGameOverDialog() {
@@ -284,7 +270,7 @@ public class PilotesView extends View {
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle(victory ? "¡Victoria!" : "Game Over")
+                builder.setTitle(victory ? "Tu ganaste" : "Perdiste")
                         .setMessage("Puntuación: " + score + "\n¿Quieres jugar de nuevo?")
                         .setPositiveButton("Sí", new DialogInterface.OnClickListener() {
                             @Override
