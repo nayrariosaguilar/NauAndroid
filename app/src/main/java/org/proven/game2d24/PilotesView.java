@@ -183,6 +183,7 @@ public class PilotesView extends View {
 
         balls.add(ball);
     }
+    //
 
     private void shootBullet() {
         if (ship != null) {
