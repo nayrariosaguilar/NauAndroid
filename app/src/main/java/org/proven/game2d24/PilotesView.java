@@ -8,10 +8,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -65,7 +66,7 @@ public class PilotesView extends View {
                         shootBullet();
                         return true;
                     } else {
-                        createRandomBall((int)x, (int)y);
+                        createRandomBall((int) x, (int) y);
                         return true;
                     }
                 }
@@ -89,9 +90,7 @@ public class PilotesView extends View {
             shipDrawable = context.getResources().getDrawable(R.drawable.nau, context.getTheme());
             ship = new Ship(shipDrawable);
         } catch (Exception e) {
-            // Si no se puede cargar el drawable, crear la nave sin imagen
-            ship = new Ship(300, 800, 100, 50, 15, context);
-            System.out.println("Error cargando drawable: " + e.getMessage());
+            System.out.println("Error aqui" + e.getMessage());
         }
     }
 
@@ -126,6 +125,7 @@ public class PilotesView extends View {
     }
 
     private void createRandomBall(int x, int y) {
+
         Ball ball = new Ball(x, y);
         int radius = random.nextInt(41) + 30;
         ball.setRadius(radius);
@@ -196,7 +196,7 @@ public class PilotesView extends View {
                 Ball b2 = balls.get(j);
                 if (b1.collision(b2)) {
                     if (b1.getPaint().getColor() == b2.getPaint().getColor()) {
-                        // Mismo color: eliminar ambas
+                        // si son del mismo color, fuera
                         balls.remove(j);
                         balls.remove(i);
                         return;
@@ -305,6 +305,7 @@ public class PilotesView extends View {
             }
         });
     }
+
     public void resetGame() {
         balls.clear();
         bullets.clear();

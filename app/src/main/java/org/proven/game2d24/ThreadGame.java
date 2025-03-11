@@ -12,7 +12,7 @@ public class ThreadGame extends Thread {
         super.run();
         try {
             while (true) {
-                sleep(200);
+                sleep(170);
                 pilotesView.update();
                 pilotesView.checkCollisions();
                 pilotesView.postInvalidate();
